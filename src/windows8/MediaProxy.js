@@ -184,6 +184,11 @@ module.exports = {
         var destPath = normalizedSrc.substr(0, normalizedSrc.lastIndexOf('\\'));
         var destFileName = normalizedSrc.replace(destPath + '\\', '');
 
+        // Modification for Mozzaz app builds
+        // Accessing paths through "ms-appdata:\\\" results in an invalid parameter error.
+        // Replace this with the absolute path instead when accessing the local folder.
+        destPath = destPath.replace("ms-appdata:\\\\\\local\\", Windows.Storage.ApplicationData.current.localFolder.path);
+
         thisM.mediaCaptureMgr.stopRecordAsync().done(function () {
             if (destPath) {
                 Windows.Storage.StorageFolder.getFolderFromPathAsync(destPath).done(function(destFolder) {
